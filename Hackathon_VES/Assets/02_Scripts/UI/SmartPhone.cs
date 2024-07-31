@@ -1,55 +1,63 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.Events;
 
-public class SmartPhone : MonoBehaviour
+public class SmartPhone : MonoBehaviour, IInteractable
 {
-    public List<Button> mainButtons;                //스마트폰 메인 창에 표시 될 모든 버튼
-    public List<GameObject> panels;                   //스마트폰에 표시될 모든 캔버스
-    public Slider battery;                          //스마트폰 배터리 
-    private bool isStop = false;
-
-    void Update()
+    public GameObject phone;
+    private GameTimer gameTimer;
+    private bool isCharge = false;
+    private SP sp;
+    public UnityEvent sendCurrentBattery;
+    [System.Serializable]
+    public class BatteryEvent : UnityEvent<float> { }
+    public BatteryEvent onBatteryChanged;
+    void Start()
     {
-        if (!isStop && Input.GetKeyDown(KeyCode.Escape))
+        gameTimer = FindObjectOfType<GameTimer>();
+        sp = FindAnyObjectByType<SP>();
+        if (sp != null)
         {
-            Time.timeScale = 0f;
-            foreach (var panel in panels)
-            {
-                panel.SetActive(true);
-            }
-            isStop = true;
-        }
-        else if (isStop && Input.GetKeyDown(KeyCode.Escape))
-        {
-            Time.timeScale = 1f;
-            foreach (var panel in panels)
-            {
-                panel.SetActive(false);
-            }
-            isStop = false;
+            //onBatteryChanged.AddListener(sp.UpdateBattery);
         }
     }
-    void OnButtonClick()
+
+    public void Interact()
     {
-        switch (mainButtons.Count)
+        isCharge = !isCharge;
+        if (!isCharge)
         {
-            case 0:
-                //문자 창 전환
-                break;
-            case 1:
-                //알람 창 전환
-                break;
-            case 2:
-                //설정 창 팝업
-                break;
-            case 3:
-                //게임 종료 확인 UI
-                break;
-            case 4:
-                //영상 시청 로직
-                break;
+            phone.SetActive(true);
+            StartCoroutine(BatteryCharge());
+            //스마트폰 UI 비 활성화
         }
+        if (isCharge)
+        {
+            phone.SetActive(false);
+
+            //스마트폰 UI 활성화
+        }
+    }
+    private IEnumerator BatteryCharge()
+    {
+        /*while (isCharge && gameTimer != null && gameTimer.timerStarted)
+        {
+            float currentBattery = sp.currentBattery;
+            float maxBattery = sp.maxBattery;
+            float batteryIncreasement = 1f;
+            currentBattery += batteryIncreasement * Time.deltaTime;
+            currentBattery = Mathf.Clamp(currentBattery, 0f, maxBattery);
+
+            onBatteryChanged.Invoke(currentBattery);
+
+
+            if (currentBattery >= maxBattery)
+            {
+                yield break;
+            }
+        }*/
+        yield return null;
+
     }
 }
