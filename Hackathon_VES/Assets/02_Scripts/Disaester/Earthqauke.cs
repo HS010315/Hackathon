@@ -6,7 +6,6 @@ public class Earthquake : MonoBehaviour
 {
     public bool play;
     public float shakeDuration = 2.0f;  // 지진 지속 시간
-    public float shakeSpeed = 2.0f;     // 지진 속도
     public float shakeAmount = 1.0f;    // 지진 강도
 
     private Vector3 originPosition;
@@ -31,11 +30,11 @@ public class Earthquake : MonoBehaviour
 
         while (elapsed < shakeDuration)
         {
-            float x = Random.Range(-1f, 1f) * shakeAmount;
-            float y = Random.Range(-1f, 1f) * shakeAmount;
-            float z = Random.Range(-1f, 1f) * shakeAmount;
+            float x = Random.Range(-0.1f, 0.1f) * shakeAmount;
+            float z = Random.Range(-0.1f, 0.1f) * shakeAmount;
+            float y = Random.Range(-0.1f, 0.1f) * shakeAmount;
 
-            transform.localPosition = new Vector3(originPosition.x + x, originPosition.y + y, originPosition.z+z);
+            transform.localPosition = new Vector3(originPosition.x+x, originPosition.y + y, originPosition.z+z);
 
             elapsed += Time.deltaTime;
             yield return null;

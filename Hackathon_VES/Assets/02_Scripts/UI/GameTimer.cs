@@ -30,6 +30,7 @@ public class GameTimer : MonoBehaviour
             return;
 
         elapsedTime += Time.deltaTime * timeScale * 60;
+
         UpdateTimeText();
 
         if (Input.GetKeyDown(KeyCode.M))
@@ -92,13 +93,6 @@ public class GameTimer : MonoBehaviour
 
             countdownCoroutine = StartCoroutine(CountDown(totalTimePassed, originalTimeScale));
         }
-        int hours = GetHours();
-        int minutes = GetMinutes();
-        int days = GetDays();
-        if (days == 4 && hours == 16 && minutes == 0)
-        {
-            gameClear.Invoke();
-        }
     }
 
     private IEnumerator CountDown(float totalTimePassed, float originalTimeScale)
@@ -139,6 +133,7 @@ public class GameTimer : MonoBehaviour
         int hours = totalHours % 24;
         int minutes = totalMinutes % 60;
         int textMinutes = minutes;
+
         if (minutes < 30)
         {
             textMinutes = 0;

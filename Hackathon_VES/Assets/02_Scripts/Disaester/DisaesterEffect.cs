@@ -3,15 +3,13 @@ using UnityEngine;
 
 public class DisaesterEffect : MonoBehaviour, IEffectable, IDamagable
 {
-    public GameObject volcanicBombPrefab;
-    public Transform launchPoint;
-    public Transform[] targetPoints; // 여러 도착 지점
-    public int numBombsPerLaunch = 3;
-    public int numLaunches = 5;
-    public float minLaunchAngle = 30f;
-    public float maxLaunchAngle = 60f;
-    public float launchPower = 100f;
-    public float gravity = -9.8f;
+    public GameObject projectilePrefab;   // 발사할 프리팹
+    public Transform[] targets;           // 목표 지점 배열
+    public Transform launchPoint;         // 발사 지점
+    public float launchSpeed = 10f;       // 발사 속도
+    public float launchInterval = 1.0f;   // 발사 간격 (초)
+    public float initialAngle = 45f;      // 발사 각도 (도)
+    public float gravityScale = 2f;       // 중력 배율
 
     public float shakeMagnitude = 0.1f;
     public float earthquakeDuration = 10.0f;
@@ -26,6 +24,14 @@ public class DisaesterEffect : MonoBehaviour, IEffectable, IDamagable
         if (cameraShake == null)
         {
             cameraShake = Camera.main.GetComponent<CameraShake>();
+        }
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            StartCoroutine(LaunchProjectiles());
         }
     }
 
@@ -58,7 +64,7 @@ public class DisaesterEffect : MonoBehaviour, IEffectable, IDamagable
         }
         else if (disaesterCase == 2)
         {
-            StartCoroutine(LaunchVolcanicBombs());
+            StartCoroutine(LaunchProjectiles());
         }
         else if (disaesterCase == 3)
         {
@@ -86,48 +92,56 @@ public class DisaesterEffect : MonoBehaviour, IEffectable, IDamagable
         earthquakeActive = false;
         playerStateInfo.ChangeState(PlayerState.Idle);
     }
-    private IEnumerator LaunchVolcanicBombs()
+
+    private IEnumerator LaunchProjectiles()
     {
-        Debug.Log("Launching volcanic bombs...");
-
-        Vector3 launchPointPosition = launchPoint.position;
-
-        for (int i = 0; i < numLaunches; i++)
+        foreach (Transform target in targets)
         {
-            for (int j = 0; j < numBombsPerLaunch; j++)
-            {
-                // 랜덤하게 선택된 도착 지점
-                Transform targetPoint = targetPoints[Random.Range(0, targetPoints.Length)];
-
-                GameObject bomb = Instantiate(volcanicBombPrefab, launchPointPosition, launchPoint.rotation);
-                Rigidbody rb = bomb.GetComponent<Rigidbody>();
-
-                if (rb != null)
-                {
-                    rb.isKinematic = false;
-
-                    Vector3 direction = (targetPoint.position - launchPointPosition).normalized;
-                    float distance = Vector3.Distance(launchPointPosition, targetPoint.position);
-
-                    float launchAngleRad = Random.Range(minLaunchAngle, maxLaunchAngle) * Mathf.Deg2Rad;
-                    float initialVelocityY = Mathf.Sqrt(-2 * gravity * (distance / Mathf.Sin(2 * launchAngleRad)));
-                    float timeToTarget = distance / (launchPower * Mathf.Cos(launchAngleRad));
-                    float initialVelocityXZ = distance / timeToTarget;
-
-                    Vector3 initialVelocity = new Vector3(direction.x * initialVelocityXZ, initialVelocityY, direction.z * initialVelocityXZ);
-                    rb.velocity = initialVelocity;
-
-                    Debug.Log($"Bomb {i * numBombsPerLaunch + j + 1}: Target position: {targetPoint.position}, Initial velocity: {initialVelocity}");
-                }
-                else
-                {
-                    Debug.LogWarning("Rigidbody not found on volcanicBombPrefab!");
-                }
-                yield return new WaitForSeconds(Random.Range(0f, 1f));
-            }
-            yield return new WaitForSeconds(Random.Range(0f, 1f));
+            LaunchProjectile(target);
+            yield return new WaitForSeconds(launchInterval);  // 지정된 간격만큼 대기
         }
+    }
 
-        Debug.Log("Volcanic bomb launching complete.");
+    void LaunchProjectile(Transform target)
+    {
+        GameObject projectile = Instantiate(projectilePrefab, launchPoint.position, launchPoint.rotation);
+        Rigidbody rb = projectile.GetComponent<Rigidbody>();
+        rb.useGravity = false;  // 기본 중력 사용 안 함
+
+        Vector3 velocity = GetVelocity(launchPoint.position, target.position, initialAngle);
+        rb.velocity = velocity;
+
+        // 인공 중력 적용
+        StartCoroutine(ApplyArtificialGravity(rb));
+    }
+
+    IEnumerator ApplyArtificialGravity(Rigidbody rb)
+    {
+        while (rb != null)
+        {
+            rb.AddForce(Vector3.down * Physics.gravity.magnitude * gravityScale, ForceMode.Acceleration);
+            yield return null;
+        }
+    }
+
+    public Vector3 GetVelocity(Vector3 launch, Vector3 targetPosition, float initialAngle)
+    {
+        float gravity = Physics.gravity.magnitude * gravityScale;
+        float angle = initialAngle * Mathf.Deg2Rad;
+
+        Vector3 planarTarget = new Vector3(targetPosition.x, 0, targetPosition.z);
+        Vector3 planarPosition = new Vector3(launch.x, 0, launch.z);
+
+        float distance = Vector3.Distance(planarTarget, planarPosition);
+        float yOffset = launch.y - targetPosition.y;
+
+        float initialVelocity = (1 / Mathf.Cos(angle)) * Mathf.Sqrt((0.5f * gravity * Mathf.Pow(distance, 2)) / (distance * Mathf.Tan(angle) + yOffset));
+
+        Vector3 velocity = new Vector3(0f, initialVelocity * Mathf.Sin(angle), initialVelocity * Mathf.Cos(angle));
+
+        float angleBetweenObjects = Vector3.Angle(Vector3.forward, planarTarget - planarPosition) * (targetPosition.x > launch.x ? 1 : -1);
+        Vector3 finalVelocity = Quaternion.AngleAxis(angleBetweenObjects, Vector3.up) * velocity;
+
+        return finalVelocity;
     }
 }
