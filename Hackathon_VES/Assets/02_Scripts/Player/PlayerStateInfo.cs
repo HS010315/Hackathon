@@ -38,7 +38,7 @@ public class PlayerStateInfo : MonoBehaviour
         get { return currentState; }
         private set { currentState = value; }
     }
-    public Animator animator;
+    //public Animator animator;
     public bool isSleeping = false;
     public PlayerController playerController;
     public GameTimer gameTimer;
@@ -110,7 +110,7 @@ public class PlayerStateInfo : MonoBehaviour
         if (!isSleeping || newState == PlayerState.Dying) // 잠자는 중이 아니거나 Dying 상태로 변경할 때만 상태 변경 허용
         {
             currentState = newState;
-            UpdateAnimator(currentState);
+            //UpdateAnimator(currentState);
         }
     }
 
@@ -129,7 +129,7 @@ public class PlayerStateInfo : MonoBehaviour
         }
     }
 
-    private void UpdateAnimator(PlayerState newState)
+    /*private void UpdateAnimator(PlayerState newState)
     {
         animator.SetBool("isIdle", false);
         animator.SetBool("isWalking", false);
@@ -172,7 +172,7 @@ public class PlayerStateInfo : MonoBehaviour
                 animator.SetBool("isIdle", true);
                 break;
         }
-    }
+    }*/
 
     private void CheckPlayInfoValues()
     {
