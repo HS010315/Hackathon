@@ -112,6 +112,10 @@ public class PlayerStateInfo : MonoBehaviour
             currentState = newState;
             //UpdateAnimator(currentState);
         }
+        if(newState == PlayerState.Sleeping)
+        {
+            isSleeping = true;
+        }
     }
 
     public PlayerState GetCurrentState()

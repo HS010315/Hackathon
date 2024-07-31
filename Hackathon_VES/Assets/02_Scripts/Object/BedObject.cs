@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class BedObject : MonoBehaviour, IInteractable, IEffectable
+public class BedObject : MonoBehaviour, IInteractable
 {
     public UnityEvent onSleep;
     public PlayerStateInfo playerStateInfo;
@@ -18,19 +18,6 @@ public class BedObject : MonoBehaviour, IInteractable, IEffectable
         else
         {
             return;
-        }
-    }
-
-    public void EffectToPlayer(PlayerStateInfo playerStateInfo)
-    {
-        playerStateInfo.Panic -= 30;
-        if (playerStateInfo.Fatigue >= 80)
-        {
-            playerStateInfo.Fatigue -= 80;
-        }
-        else
-        {
-            playerStateInfo.Fatigue = 0;
         }
     }
 }

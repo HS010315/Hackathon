@@ -75,27 +75,31 @@ public class GameTimer : MonoBehaviour
     {
         if (playerStateInfo.CurrentState == PlayerState.Dying)
             return;
+
         playerController.SetMoveable(false);
+
+        int sleepHours = Mathf.Clamp(timePassed, 0, 16);
+
         if (timeScale == 1f)
         {
-            if (timePassed >= 4)
+            if (sleepHours >= 4)
             {
-                PlayerStateInfo playerStateInfo = FindObjectOfType<PlayerStateInfo>();
                 playerStateInfo.ChangeState(PlayerState.Sleeping);
                 cameraFade.FadeOut(1f);
                 timeText.color = Color.white;
                 dateText.color = Color.white;
             }
+
             float originalTimeScale = Time.timeScale;
             Time.timeScale = 60;
 
-            float totalTimePassed = timePassed * 900;
+            float totalTimePassed = sleepHours * 900; 
 
-            countdownCoroutine = StartCoroutine(CountDown(totalTimePassed, originalTimeScale));
+            countdownCoroutine = StartCoroutine(CountDown(totalTimePassed, originalTimeScale, sleepHours));
         }
     }
 
-    private IEnumerator CountDown(float totalTimePassed, float originalTimeScale)
+    private IEnumerator CountDown(float totalTimePassed, float originalTimeScale, int sleepHours)
     {
         while (totalTimePassed > 0)
         {
@@ -107,13 +111,20 @@ public class GameTimer : MonoBehaviour
             float deltaTime = Time.deltaTime * Time.timeScale;
             elapsedTime += deltaTime;
             totalTimePassed -= deltaTime;
-
             UpdateTimeText();
 
             yield return null;
         }
 
         Time.timeScale = originalTimeScale;
+
+        // Sleep Hours에 비례하여 Fatigue와 Panic 감소
+        int fatigueDecrease = Mathf.RoundToInt(Mathf.Lerp(0, 80, sleepHours / 16f));
+        int panicDecrease = Mathf.RoundToInt(Mathf.Lerp(0, 30, sleepHours / 16f));
+
+        playerStateInfo.Fatigue = Mathf.Clamp(playerStateInfo.Fatigue - fatigueDecrease, 0, 100);
+        playerStateInfo.Panic = Mathf.Clamp(playerStateInfo.Panic - panicDecrease, 0, 100);
+
         if (playerStateInfo.isSleeping)
         {
             playerStateInfo.WakeUp();

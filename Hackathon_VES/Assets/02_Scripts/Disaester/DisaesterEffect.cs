@@ -76,7 +76,7 @@ public class DisaesterEffect : MonoBehaviour, IEffectable, IDamagable
     {
         Debug.Log("지진 시작");
         earthquakeActive = true;
-
+        playerStateInfo.WakeUp();
         StartCoroutine(cameraShake.Shake(earthquakeDuration, shakeMagnitude));
 
         yield return new WaitForSeconds(damageTime);
