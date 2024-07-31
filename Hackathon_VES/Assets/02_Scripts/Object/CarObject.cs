@@ -4,49 +4,13 @@ using UnityEngine;
 
 public class CarObject : MonoBehaviour, IInteractable
 {
-    public Transform drivePosition;
-    public PlayerStateInfo playerStateInfo;
-    public GameObject driver;
-
-    private bool inCar = false;
-    private Vector3 interactPosition;
-
+    public bool isInteractable = false;
+    public bool IsInteractable
+    {
+        get { return isInteractable; }
+    }
     public void Interact()
     {
-        if (!inCar)
-        {
-            interactPosition = driver.transform.position;
-            inCar = true;
-            GoInCar();
-        }
-        else
-        {
-            inCar = false;
-            GoOutCar();
-        }
-    }
-
-    void GoInCar()
-    {
-        driver.transform.position = drivePosition.position;
-        playerStateInfo.ChangeState(PlayerState.Sitting);
-
-        PlayerController playerController = driver.GetComponent<PlayerController>();
-        if (playerController != null)
-        {
-            playerController.SetMoveable(false);
-        }
-    }
-
-    void GoOutCar()
-    {
-        driver.transform.position = interactPosition;
-        playerStateInfo.ChangeState(PlayerState.Idle);
-
-        PlayerController playerController = driver.GetComponent<PlayerController>();
-        if (playerController != null)
-        {
-            playerController.SetMoveable(true);
-        }
+        //사운드 플레이 or text로 고장 표시
     }
 }

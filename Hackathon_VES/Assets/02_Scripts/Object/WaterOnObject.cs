@@ -9,6 +9,11 @@ public class WaterOnObject : MonoBehaviour, IInteractable
     private GameTimer gameTimer;
     private Disaester disaester;
     public GameObject waterObject;
+    public bool isInteractable = true;
+    public bool IsInteractable
+    {
+        get { return isInteractable; }
+    }
     void Start()
     {
         gameTimer = FindObjectOfType<GameTimer>();
@@ -25,6 +30,10 @@ public class WaterOnObject : MonoBehaviour, IInteractable
                 waterObject.SetActive(true);
                 StartCoroutine(IncreaseWater());
             }
+        }
+        else
+        {
+            isInteractable = false;
         }
     }
 

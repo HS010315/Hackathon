@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class FaJObject : MonoBehaviour, IEffectable, IInteractable
 {
+    public bool isInteractable = true;
+    public bool IsInteractable
+    {
+        get { return isInteractable; }
+    }
     public void EffectToPlayer(PlayerStateInfo playerStateInfo)
     {
         if (playerStateInfo.Hp > 80)

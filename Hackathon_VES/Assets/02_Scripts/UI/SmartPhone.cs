@@ -13,6 +13,11 @@ public class SmartPhone : MonoBehaviour, IInteractable
     [System.Serializable]
     public class BatteryEvent : UnityEvent<float> { }
     public BatteryEvent onBatteryChanged;
+    public bool isInteractable = true;
+    public bool IsInteractable
+    {
+        get { return isInteractable; }
+    }
     void Start()
     {
         gameTimer = FindObjectOfType<GameTimer>();

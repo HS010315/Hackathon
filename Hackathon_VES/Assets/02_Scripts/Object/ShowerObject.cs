@@ -7,6 +7,11 @@ public class ShowerObject : MonoBehaviour, IInteractable, IEffectable
 {
     public WaterOnObject water;
     public UnityEvent spendTime;
+    public bool isInteractable = true;
+    public bool IsInteractable
+    {
+        get { return isInteractable; }
+    }
 
     public void EffectToPlayer(PlayerStateInfo playerStateInfo)
     {
@@ -43,6 +48,7 @@ public class ShowerObject : MonoBehaviour, IInteractable, IEffectable
             if (water.currentWater <= 0)
             {
                 water.waterObject.SetActive(false);
+                isInteractable = false;
                 yield break;
             }
             yield return null;

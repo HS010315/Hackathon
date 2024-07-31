@@ -7,10 +7,10 @@ public class InteractionController : MonoBehaviour
     public Camera playerCamera;
     public Text interactionText;
     public PlayerStateInfo playerStateInfo;
+    public bool isDisabled;
 
     private IEffectable currentEffectable;
     private IInteractable currentInteractable;
-    public bool isDisabled;
     void Update()
     {
         DetectInteractable();
@@ -30,12 +30,18 @@ public class InteractionController : MonoBehaviour
             if (interactable != null)
             {
                 currentInteractable = interactable;
-                if(isDisabled)
+
+                if (currentInteractable.IsInteractable)
+                {
+                    interactionText.color = Color.white;
+                    interactionText.text = "Press E to interact";
+                }
+                else
                 {
                     interactionText.color = Color.red;
+                    interactionText.text = "Cannot interact";
                 }
                 interactionText.gameObject.SetActive(true);
-                interactionText.text = "E를 눌러 상호작용";
             }
             else
             {

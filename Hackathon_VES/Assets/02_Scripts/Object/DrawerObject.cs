@@ -9,7 +9,11 @@ public class DrawerObject : MonoBehaviour, IInteractable
     private Vector3 closedPosition;
     private Vector3 openPosition;
     public bool isXopen = false;
-
+    public bool isInteractable = true;
+    public bool IsInteractable
+    {
+        get { return isInteractable; }
+    }
     void Start()
     {
         closedPosition = transform.position;

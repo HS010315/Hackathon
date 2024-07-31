@@ -9,6 +9,11 @@ public class FenceObject : MonoBehaviour , IInteractable
     public UnityEvent spendTime;
     public MonoBehaviour myScript;
     public GameObject guideFense;
+    public bool isInteractable = true;
+    public bool IsInteractable
+    {
+        get { return isInteractable; }
+    }
     public void Interact()
     {
         Destroy(guideFense);

@@ -9,7 +9,11 @@ public class DoorObject : MonoBehaviour, IInteractable
     private Rigidbody rb;
     private Quaternion closedRotation;
     private Quaternion openRotation;
-
+    public bool isInteractable = true;
+    public bool IsInteractable
+    {
+        get { return isInteractable; }
+    }
     void Start()
     {
         rb = GetComponent<Rigidbody>();

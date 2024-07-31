@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class FoodObject : MonoBehaviour, IEffectable, IInteractable
 {
+    public bool isInteractable = true;
+    public bool IsInteractable
+    {
+        get { return isInteractable; }
+    }
     public void EffectToPlayer(PlayerStateInfo playerStateInfo)
     {
         if (this.gameObject.CompareTag("Food"))
