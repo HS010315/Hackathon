@@ -27,7 +27,6 @@ public class Disaester : MonoBehaviour
     private bool disasterTriggered;
     private bool effectTriggerd;
     private float cooldownTime = 1f;
-    private float LavaCount = 0f;
     public Electric electricToggle;
     public DisaesterEffect disaesterEffect;
     public PlayerStateInfo playerStateInfo;
@@ -126,22 +125,18 @@ public class Disaester : MonoBehaviour
         int result = Random.Range(0, 10);
         if (result < 3)
         {
-            TriggerLavaEvent(1);
+            TriggerLavaEvent();
         }
         else if(result >= 3)
         {
             TriggerVolcanicBombEvent();
         }
     }
-    void TriggerLavaEvent(int lavaBoom)
+    void TriggerLavaEvent()
     {
-        LavaCount += lavaBoom;
-        if ((LavaCount >= 5))
-        {
-            disaesterEffect.DisaesterEvent(DisaesterList.Lava);
-            disaesterEffect.EffectToPlayer(playerStateInfo);
-            disaesterEffect.DamageToPlayer(playerStateInfo);
-        }
+        disaesterEffect.DisaesterEvent(DisaesterList.Lava);
+        disaesterEffect.EffectToPlayer(playerStateInfo);
+        disaesterEffect.DamageToPlayer(playerStateInfo);
         Debug.Log("Lava Event Triggered");
     }
     void TriggerVolcanicBombEvent()

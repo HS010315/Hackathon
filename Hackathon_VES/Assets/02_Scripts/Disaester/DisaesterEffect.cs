@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class DisaesterEffect : MonoBehaviour, IEffectable, IDamagable
@@ -19,7 +20,10 @@ public class DisaesterEffect : MonoBehaviour, IEffectable, IDamagable
     private bool earthquakeActive = false;
     private int disaesterCase = 0;
     private int effectCase = 0;
-
+    private int lavaCount = 0;
+    public List<Transform> lavaPosition;
+    public Transform lava;
+    public float speed = 5f;
     void Start()
     {
         if (cameraShake == null)
@@ -98,7 +102,7 @@ public class DisaesterEffect : MonoBehaviour, IEffectable, IDamagable
         }
         else if (disaesterCase == 3)
         {
-
+            LavaUpdate(1);
         }
     }
 
@@ -173,5 +177,21 @@ public class DisaesterEffect : MonoBehaviour, IEffectable, IDamagable
         Vector3 finalVelocity = Quaternion.AngleAxis(angleBetweenObjects, Vector3.up) * velocity;
 
         return finalVelocity;
+    }
+
+    public void LavaUpdate(int count)
+    {
+        lavaCount += count;
+        lavaCount = Mathf.Clamp(lavaCount, 0, lavaPosition.Count - 1);
+        StartCoroutine(MoveLava(lavaPosition[lavaCount].position));
+    }
+    private IEnumerator MoveLava(Vector3 targetPosition)
+    {
+        while (Vector3.Distance(lava.position, targetPosition) > 0.01f)
+        {
+            lava.position = Vector3.MoveTowards(lava.position, targetPosition, speed * Time.deltaTime);
+            yield return null;
+        }
+        lava.position = targetPosition; // 정확한 위치에 도달하도록 보정
     }
 }

@@ -90,6 +90,7 @@ public class GameTimer : MonoBehaviour
         {
             if (sleepHours >= 4)
             {
+                PlayerStateInfo playerStateInfo = FindObjectOfType<PlayerStateInfo>();
                 playerStateInfo.ChangeState(PlayerState.Sleeping);
                 cameraFade.FadeOut(1f);
                 timeText.color = Color.white;
