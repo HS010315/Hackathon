@@ -17,6 +17,7 @@ public class SP : MonoBehaviour
     public Button watchVideoButton;
     public Button resqueButton;                     // 구조 요청 버튼
     private GameTimer gameTimer;
+    private Helicopter helicopter;
     private PlayerStateInfo playerStateInfo;
 
     private int alarmValue = 0; // 알람 값을 시간 단위로 저장
@@ -35,6 +36,7 @@ public class SP : MonoBehaviour
         SubButtonInteractability();
         gameTimer = FindObjectOfType<GameTimer>();
         playerStateInfo = FindObjectOfType<PlayerStateInfo>();
+        helicopter = FindAnyObjectByType<Helicopter>();
         resqueButton.interactable = false;
 
         gameTimer.OnSpTextUpdated += CheckResqueButtonInteractability; // 이벤트 구독
@@ -113,7 +115,10 @@ public class SP : MonoBehaviour
 
     public void PullresqueButton()
     {
-        // 구조 요청 버튼 기능 구현
+        if (helicopter != null)
+        {
+            helicopter.ActivateHelicopter(); 
+        }
     }
 
     public void AlarmButton()
