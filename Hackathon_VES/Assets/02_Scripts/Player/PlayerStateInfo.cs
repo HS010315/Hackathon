@@ -40,6 +40,8 @@ public class PlayerStateInfo : MonoBehaviour
     }
     //public Animator animator;
     public bool isSleeping = false;
+    public bool isSafe = false;
+    public DoorObject doorObject;
     public PlayerController playerController;
     public GameTimer gameTimer;
     public int Hp
@@ -105,6 +107,24 @@ public class PlayerStateInfo : MonoBehaviour
         CurrentState = PlayerState.Idle;
     }
 
+    private void OnCollisionStay(Collision home)
+    {
+        if(home.gameObject.CompareTag("Home") && !doorObject.isOpen)
+        {
+            isSafe = true;
+        }
+        else if(doorObject.isOpen)
+        {
+            isSafe = false;
+        }
+    }
+    public void OnCollisionExit(Collision home)
+    {
+        if(home.gameObject.CompareTag("Home"))
+        {
+            isSafe = false;
+        }
+    }
     public void ChangeState(PlayerState newState)
     {
         if (!isSleeping || newState == PlayerState.Dying) // 잠자는 중이 아니거나 Dying 상태로 변경할 때만 상태 변경 허용

@@ -18,6 +18,7 @@ public class DisaesterEffect : MonoBehaviour, IEffectable, IDamagable
     public CameraShake cameraShake;
     private bool earthquakeActive = false;
     private int disaesterCase = 0;
+    private int effectCase = 0;
 
     void Start()
     {
@@ -33,6 +34,22 @@ public class DisaesterEffect : MonoBehaviour, IEffectable, IDamagable
         {
             StartCoroutine(LaunchProjectiles());
         }
+        if(!playerStateInfo.isSafe)
+        {
+            int conIncrease = 20;
+            if(effectCase == 1)
+            {
+                conIncrease = 40;
+            }
+            else if (effectCase == 2)
+            {
+                conIncrease = 20;
+            }
+            int currentCon = playerStateInfo.Contamination;
+            currentCon += conIncrease * Mathf.RoundToInt(Time.deltaTime) / 60;
+            currentCon = Mathf.Clamp(currentCon, 0, 100);
+            playerStateInfo.Contamination = currentCon;
+        }
     }
 
     public void DisaesterEvent(DisaesterList disaesterType)
@@ -47,6 +64,19 @@ public class DisaesterEffect : MonoBehaviour, IEffectable, IDamagable
                 break;
             case DisaesterList.Lava:
                 disaesterCase = 3;
+                break;
+        }
+    }
+
+    public void DisaesterEffectOn(DisaesterEffectList effectType)
+    {
+        switch(effectType)
+        {
+            case DisaesterEffectList.VolcanicAsh:
+                effectCase = 1;
+                break;
+            case DisaesterEffectList.VolcanicGas:
+                effectCase = 2;
                 break;
         }
     }

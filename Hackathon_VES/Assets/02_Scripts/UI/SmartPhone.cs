@@ -6,7 +6,6 @@ using UnityEngine.Events;
 public class SmartPhone : MonoBehaviour, IInteractable
 {
     public GameObject phone;
-    private GameTimer gameTimer;
     private bool isCharge = false;
     private SP sp;
     public UnityEvent sendCurrentBattery;
@@ -20,33 +19,43 @@ public class SmartPhone : MonoBehaviour, IInteractable
     }
     void Start()
     {
-        gameTimer = FindObjectOfType<GameTimer>();
         sp = FindAnyObjectByType<SP>();
         if (sp != null)
         {
             //onBatteryChanged.AddListener(sp.UpdateBattery);
         }
     }
-
+    
     public void Interact()
     {
-        isCharge = !isCharge;
-        if (!isCharge)
+        if(isInteractable)
         {
-            phone.SetActive(true);
-            StartCoroutine(BatteryCharge());
-            //스마트폰 UI 비 활성화
+            isCharge = !isCharge;
+            if (!isCharge)
+            {
+                phone.SetActive(true);
+                StartCoroutine(BatteryCharge());
+                //스마트폰 UI 비 활성화
+            }
+            if (isCharge)
+            {
+                phone.SetActive(false);
+
+                //스마트폰 UI 활성화
+            }
         }
-        if (isCharge)
+        else
         {
             phone.SetActive(false);
-
-            //스마트폰 UI 활성화
         }
+    }
+    public void ElectricToggle()
+    {
+        isInteractable = !isInteractable;
     }
     private IEnumerator BatteryCharge()
     {
-        /*while (isCharge && gameTimer != null && gameTimer.timerStarted)
+        /*while (isCharge && gameTimer != null && gameTimer.timerStarted && isInteractable)
         {
             float currentBattery = sp.currentBattery;
             float maxBattery = sp.maxBattery;
@@ -57,7 +66,7 @@ public class SmartPhone : MonoBehaviour, IInteractable
             onBatteryChanged.Invoke(currentBattery);
 
 
-            if (currentBattery >= maxBattery)
+            if (currentBattery >= maxBattery || !isInteractable)
             {
                 yield break;
             }

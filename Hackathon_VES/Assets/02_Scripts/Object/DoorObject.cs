@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class DoorObject : MonoBehaviour, IInteractable
 {
-    private bool isOpen = false;
+    public bool isOpen = false;
     public float rotationAngle = 90f;
     public float rotationSpeed = 5f;
     private Rigidbody rb;
