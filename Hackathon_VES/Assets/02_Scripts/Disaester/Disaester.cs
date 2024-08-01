@@ -25,8 +25,10 @@ public class Disaester : MonoBehaviour
     private bool earthquakeTriggered = false;
     public bool firstTimeDisaester = false;
     private bool disasterTriggered;
+    private bool effectTriggerd;
     private float cooldownTime = 1f;
     private float LavaCount = 0f;
+    public Electric electricToggle;
     public DisaesterEffect disaesterEffect;
     public PlayerStateInfo playerStateInfo;
     private PlayerState currentState;
@@ -35,12 +37,11 @@ public class Disaester : MonoBehaviour
         get { return currentState; }
         private set { currentState = value; }
     }
-
-
     void Start()
     {
         eventTimes = new List<float> { 0, 4, 8, 12, 16, 20 };
         disasterTriggered = false;
+        effectTriggerd = false;
     }
 
     void Update()
@@ -53,7 +54,6 @@ public class Disaester : MonoBehaviour
         {
             return;
         }
-
         if (!earthquakeTriggered && days == 1 && hours == 8 && minutes == 0)
         {
             TriggerEarthquakeEvent();
@@ -67,7 +67,34 @@ public class Disaester : MonoBehaviour
             disasterTriggered = true;
             DisaesterEvent();
         }
+        if(effectTriggerd && days == 1 && hours == 20 && minutes == 0)
+        {
+            effectTriggerd = true;
+            GasOn();
+        }
+        if(effectTriggerd && days == 2 && hours == 4 && minutes == 0)
+        {
+            effectTriggerd = true;
+            AshOn();
+        }
+        if(effectTriggerd && days == 2 && hours == 16 && minutes == 0
+            || effectTriggerd && days == 3 && hours == 20 && minutes == 0)
+        {
+            effectTriggerd = true;
+            electricToggle.OnElectricEvent();
+            effectTriggerd = false;
+        }
     }
+    void GasOn()
+    {
+        effectTriggerd = false;
+        disaesterEffect.DisaesterEffectOn(DisaesterEffectList.VolcanicGas);
+    }
+    void AshOn()
+    {
+        effectTriggerd = false;
+        disaesterEffect.DisaesterEffectOn(DisaesterEffectList.VolcanicAsh);
+    }    
 
     void DisaesterEvent()
     {
@@ -99,16 +126,16 @@ public class Disaester : MonoBehaviour
         int result = Random.Range(0, 10);
         if (result < 3)
         {
-            TriggerLavaEvent();
+            TriggerLavaEvent(1);
         }
         else if(result >= 3)
         {
             TriggerVolcanicBombEvent();
         }
     }
-    void TriggerLavaEvent()
+    void TriggerLavaEvent(int lavaBoom)
     {
-        LavaCount++;
+        LavaCount += lavaBoom;
         if ((LavaCount >= 5))
         {
             disaesterEffect.DisaesterEvent(DisaesterList.Lava);
