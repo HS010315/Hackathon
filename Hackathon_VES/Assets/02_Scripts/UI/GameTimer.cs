@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
@@ -8,6 +9,8 @@ public class GameTimer : MonoBehaviour
 {
     public Text timeText;
     public Text dateText;
+    public Text spText;
+    public Text alarmText;
     public float elapsedTime = 0f;
     public bool timerStarted = false;
     private int startDay = 1;
@@ -18,6 +21,8 @@ public class GameTimer : MonoBehaviour
     private bool isChangeInfo = false;
     public Coroutine countdownCoroutine;
     public UnityEvent gameClear;
+
+    public event Action<string> OnSpTextUpdated; // 새로운 이벤트 추가
 
     private void Start()
     {
@@ -93,7 +98,7 @@ public class GameTimer : MonoBehaviour
             float originalTimeScale = Time.timeScale;
             Time.timeScale = 60;
 
-            float totalTimePassed = sleepHours * 900; 
+            float totalTimePassed = sleepHours * 900;
 
             countdownCoroutine = StartCoroutine(CountDown(totalTimePassed, originalTimeScale, sleepHours));
         }
@@ -134,6 +139,10 @@ public class GameTimer : MonoBehaviour
         }
         playerController.SetMoveable(true);
     }
+    public void SetAlarmTime(int hours, int minutes)
+    {
+        alarmText.text = string.Format("{0:D2}:{1:D2}", hours, minutes);
+    }
 
     public void UpdateTimeText()
     {
@@ -163,6 +172,11 @@ public class GameTimer : MonoBehaviour
 
         timeText.text = string.Format("{0:D2}:{1:D2}", hours, textMinutes);
         dateText.text = string.Format("Day {0}", days);
+        alarmText.text = string.Format("{0:D2}:{1:D2}", hours, textMinutes);
+        spText.text = string.Format("Day {0}:{0:D2}:{1:D2}", days, hours, textMinutes);
+        
+
+        OnSpTextUpdated?.Invoke(spText.text); // spText가 갱신될 때 이벤트 발생
     }
 
     private void UpdatePlayInfo()
