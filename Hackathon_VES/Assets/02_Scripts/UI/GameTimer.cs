@@ -26,8 +26,8 @@ public class GameTimer : MonoBehaviour
 
     private void Start()
     {
-        StartTimer();
         Time.timeScale = 1f;
+        timeText.gameObject.SetActive(false);
     }
 
     void Update()
@@ -51,8 +51,11 @@ public class GameTimer : MonoBehaviour
         }
     }
 
+
+
     public void StartTimer()
     {
+        timeText.gameObject.SetActive(true);
         elapsedTime = (8 * 60) * 60;
         timerStarted = true;
     }

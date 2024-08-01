@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Events;
 
 public class SP : MonoBehaviour
 {
@@ -43,6 +44,12 @@ public class SP : MonoBehaviour
 
         // 초기 알람 텍스트 설정
         UpdateAlarmText();
+
+        // 메시지 버튼 클릭 이벤트 리스너 추가
+        if (messageButton != null)
+        {
+            messageButton.onClick.AddListener(OnMessageButtonClick);
+        }
     }
 
     void Update()
@@ -51,6 +58,8 @@ public class SP : MonoBehaviour
         {
             Time.timeScale = 0f;
             mainPanel.SetActive(true);
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
             battery.gameObject.SetActive(true);
             isStop = true;
         }
@@ -58,6 +67,8 @@ public class SP : MonoBehaviour
         {
             Time.timeScale = 1f;
             mainPanel.SetActive(false);
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
             foreach (var panel in subPanels)
             {
                 panel.SetActive(false);
@@ -117,7 +128,7 @@ public class SP : MonoBehaviour
     {
         if (helicopter != null)
         {
-            helicopter.ActivateHelicopter(); 
+            helicopter.ActivateHelicopter();
         }
     }
 
@@ -183,6 +194,14 @@ public class SP : MonoBehaviour
                     resqueButton.interactable = true;
                 }
             }
+        }
+    }
+
+    private void OnMessageButtonClick()
+    {
+        if (gameTimer != null)
+        {
+            gameTimer.StartTimer();
         }
     }
 }
