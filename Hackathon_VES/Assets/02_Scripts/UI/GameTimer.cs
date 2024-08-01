@@ -20,6 +20,7 @@ public class GameTimer : MonoBehaviour
     public PlayerController playerController;
     private bool isChangeInfo = false;
     public Coroutine countdownCoroutine;
+    public Helicopter helicopter;
     public UnityEvent gameClear;
 
     public event Action<string> OnSpTextUpdated; // 새로운 이벤트 추가
