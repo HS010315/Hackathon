@@ -41,7 +41,7 @@ public class PlayerStateInfo : MonoBehaviour
     //public Animator animator;
     public bool isSleeping = false;
     public bool isSafe = false;
-    public DoorObject doorObject;
+    public DrawerObject doorObject;
     public PlayerController playerController;
     public GameTimer gameTimer;
     public int Hp

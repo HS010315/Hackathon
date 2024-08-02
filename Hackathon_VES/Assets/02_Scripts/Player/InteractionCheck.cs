@@ -68,8 +68,7 @@ public class InteractionController : MonoBehaviour
 
     void HandleInteraction()
     {
-        if(currentInteractable.IsInteractable)
-        {
+
             if (currentEffectable != null && Input.GetKeyDown(KeyCode.E))
             {
                 currentEffectable.EffectToPlayer(playerStateInfo);
@@ -79,6 +78,6 @@ public class InteractionController : MonoBehaviour
             {
                 currentInteractable.Interact();
             }
-        }
+
     }
 }

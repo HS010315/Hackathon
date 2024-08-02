@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class DrawerObject : MonoBehaviour, IInteractable
 {
-    private bool isOpen = false;
+    public bool isOpen = false;
     public float slideDistance = 1f; // 슬라이드할 거리
     public float slideSpeed = 2f; // 슬라이드 속도
     private Vector3 closedPosition;

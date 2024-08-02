@@ -40,7 +40,7 @@ public class SP : MonoBehaviour
         helicopter = FindAnyObjectByType<Helicopter>();
         resqueButton.interactable = false;
 
-        gameTimer.OnSpTextUpdated += CheckResqueButtonInteractability; // 이벤트 구독
+        //gameTimer.OnSpTextUpdated += CheckResqueButtonInteractability; // 이벤트 구독
 
         // 초기 알람 텍스트 설정
         UpdateAlarmText();
@@ -176,7 +176,7 @@ public class SP : MonoBehaviour
         watchVideoButton.interactable = !isBatteryZero;
     }
 
-    private void CheckResqueButtonInteractability(string spText)
+    /*private void CheckResqueButtonInteractability(string spText)
     {
         // spText를 "Day 4:04:00" 이상인지 확인하는 로직
         string[] parts = spText.Split(' ');
@@ -195,7 +195,7 @@ public class SP : MonoBehaviour
                 }
             }
         }
-    }
+    }*/
 
     private void OnMessageButtonClick()
     {
